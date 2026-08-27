@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+
+  /* Light theme — derived from the Millennium brand palette (same accents, lighter surfaces) */
+  --background: #f8fafc;
+  --foreground: #050914;
+  --card: #ffffff;
+  --card-foreground: #050914;
+  --popover: #ffffff;
+  --popover-foreground: #050914;
+  --primary: #7c3aed;
+  --primary-foreground: #f8fafc;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0b1222;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f5f3ff;
+  --accent-foreground: #6d28d9;
+  --cyan: #0891b2;
+  --cyan-foreground: #f8fafc;
+  --warning: #db2777;
+  --warning-foreground: #f8fafc;
+  --destructive: #db2777;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #8b5cf6;
+}
+
+.dark {
+  /* Dark theme — Millennium brand palette */
+  --background: #050914;
+  --foreground: #f1f5f9;
+  --card: #10182a;
+  --card-foreground: #f1f5f9;
+  --popover: #10182a;
+  --popover-foreground: #f1f5f9;
+  --primary: #8b5cf6;
+  --primary-foreground: #f1f5f9;
+  --secondary: #0b1222;
+  --secondary-foreground: #f1f5f9;
+  --muted: #0b1222;
+  --muted-foreground: #94a3b8;
+  --accent: #10182a;
+  --accent-foreground: #a78bfa;
+  --cyan: #22d3ee;
+  --cyan-foreground: #050914;
+  --warning: #ec4899;
+  --warning-foreground: #f1f5f9;
+  --destructive: #ec4899;
+  --border: #28304a;
+  --input: #28304a;
+  --ring: #8b5cf6;
+}
+
+@theme inline {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Press Start 2P", ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-cyan: var(--cyan);
+  --color-cyan-foreground: var(--cyan-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+}
