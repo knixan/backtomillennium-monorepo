@@ -4,6 +4,9 @@ import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
 
+import { MobileTabBar } from "@/components/mobile-tab-bar";
+import { SiteHeader } from "@/components/site-header";
+
 interface RouterContext {
   queryClient: QueryClient;
 }
@@ -25,7 +28,11 @@ function RootLayout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Outlet />
+      <SiteHeader />
+      <div className="pb-20 lg:pb-0">
+        <Outlet />
+      </div>
+      <MobileTabBar />
       <TanStackRouterDevtools position="bottom-right" />
       <ReactQueryDevtools buttonPosition="bottom-left" />
     </div>

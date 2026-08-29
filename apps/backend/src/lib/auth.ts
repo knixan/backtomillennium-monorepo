@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { APIError } from "better-auth/api";
 import { expo } from "@better-auth/expo";
+import { MIN_AGE, isOldEnough } from "@nathanget/shared-types";
 import { prisma } from "./prisma.js";
 import { sendEmail } from "./mailer.js";
 
@@ -14,6 +16,8 @@ export const auth = betterAuth({
     requireEmailVerification: true,
   },
   emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       void sendEmail({
         to: user.email,
@@ -35,6 +39,26 @@ export const auth = betterAuth({
       sexAssignedAtBirth: {
         type: ["tjej", "kille"],
         required: true,
+      },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        // Åldersgräns 13 år – serversidan har sista ordet (klientvalidering går att kringgå).
+        before: async (user) => {
+          const birthDate = (user as { birthDate?: Date | string | null }).birthDate;
+          const parsed = birthDate ? new Date(birthDate) : null;
+
+          if (!parsed || Number.isNaN(parsed.getTime())) {
+            throw new APIError("BAD_REQUEST", { message: "Ogiltigt födelsedatum." });
+          }
+          if (!isOldEnough(parsed)) {
+            throw new APIError("BAD_REQUEST", {
+              message: `Du måste vara minst ${MIN_AGE} år för att skapa ett konto.`,
+            });
+          }
+        },
       },
     },
   },
