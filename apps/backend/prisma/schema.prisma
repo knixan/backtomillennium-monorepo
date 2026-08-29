@@ -20,7 +20,7 @@ model User {
   accounts      Account[]
 
   nickname           String
-  birthDate          DateTime
+  birthDate          DateTime @db.Date
   sexAssignedAtBirth String
 
   @@unique([email])
