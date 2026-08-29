@@ -1,0 +1,44 @@
+# fetch-depth: 0 — Turborepo måste kunna jämföra mot tidigare commits för att räkna ut vad som ändrats; ett standard shallow-checkout (senaste commiten) räcker inte.
+# DATABASE_URL i Prisma-steget är en påhittad platshållare, inte en riktig hemlighet — prisma generate kopplar aldrig upp mot databasen, den bara läser schema-filen, men klagar om variabeln saknas helt.
+# --filter="...[ref]" — ... betyder "plus allt som beror på de ändrade paketen", [ref] är jämförelsepunkten (föregående commit vid push till main, PR:ens bas-branch vid pull request).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @backtomillennium/backend prisma:generate
+        env:
+          DATABASE_URL: "postgresql://user:password@localhost:5432/db"
+
+      - name: Determine comparison ref
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=HEAD^1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Lint, typecheck, build affected packages
+        run: pnpm turbo run lint typecheck build --filter="...[${{ steps.base.outputs.ref }}]"
