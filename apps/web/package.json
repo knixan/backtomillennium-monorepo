@@ -1,5 +1,5 @@
 {
-  "name": "@backtomillennium/web",
+  "name": "@nathanget/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@backtomillennium/shared-types": "workspace:^",
+    "@nathanget/shared-types": "workspace:^",
     "@hookform/resolvers": "^5.9.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.102.7",

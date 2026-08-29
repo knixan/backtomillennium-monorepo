@@ -17,7 +17,7 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.safeArea}>
         <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.border }]}>
           <ThemedText type="display" themeColor="primary">
-            MILLENIUM 2
+            NÄTHÄNGET
           </ThemedText>
           <ThemedText type="small" themeColor="textSecondary" style={styles.subtitle}>
             Mobile-grund: Expo + TanStack Query

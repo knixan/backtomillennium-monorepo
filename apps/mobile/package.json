@@ -1,9 +1,9 @@
 {
-  "name": "@backtomillennium/mobile",
+  "name": "@nathanget/mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
-    "@backtomillennium/shared-types": "workspace:^",
+    "@nathanget/shared-types": "workspace:^",
     "@better-auth/expo": "^1.7.2",
     "@expo-google-fonts/press-start-2p": "^0.4.1",
     "@expo-google-fonts/space-grotesk": "^0.4.1",

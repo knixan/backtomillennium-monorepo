@@ -1,5 +1,5 @@
 /**
- * Millennium brand palette, mirrored from apps/web/src/index.css.
+ * Näthänget brand palette, mirrored from apps/web/src/index.css.
  */
 
 import { Platform } from 'react-native';

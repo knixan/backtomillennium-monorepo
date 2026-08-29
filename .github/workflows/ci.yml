@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: pnpm --filter @backtomillennium/backend prisma:generate
+        run: pnpm --filter @nathanget/backend prisma:generate
         env:
           DATABASE_URL: "postgresql://user:password@localhost:5432/db"
 

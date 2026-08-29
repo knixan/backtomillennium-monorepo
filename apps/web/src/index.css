@@ -6,7 +6,7 @@
 :root {
   --radius: 0.625rem;
 
-  /* Light theme — derived from the Millennium brand palette (same accents, lighter surfaces) */
+  /* Light theme — derived from the Näthänget brand palette (same accents, lighter surfaces) */
   --background: #f8fafc;
   --foreground: #050914;
   --card: #ffffff;
@@ -32,7 +32,7 @@
 }
 
 .dark {
-  /* Dark theme — Millennium brand palette */
+  /* Dark theme — Näthänget brand palette */
   --background: #050914;
   --foreground: #f1f5f9;
   --card: #10182a;

@@ -19,7 +19,7 @@ SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-const MillenniumLight: Theme = {
+const NathangetLight: Theme = {
   dark: false,
   colors: {
     primary: Colors.light.primary,
@@ -37,7 +37,7 @@ const MillenniumLight: Theme = {
   },
 };
 
-const MillenniumDark: Theme = {
+const NathangetDark: Theme = {
   dark: true,
   colors: {
     primary: Colors.dark.primary,
@@ -47,7 +47,7 @@ const MillenniumDark: Theme = {
     border: Colors.dark.border,
     notification: Colors.dark.warning,
   },
-  fonts: MillenniumLight.fonts,
+  fonts: NathangetLight.fonts,
 };
 
 export default function RootLayout() {
@@ -71,7 +71,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === 'dark' ? MillenniumDark : MillenniumLight}>
+      <ThemeProvider value={colorScheme === 'dark' ? NathangetDark : NathangetLight}>
         <Stack screenOptions={{ headerShown: false }} />
       </ThemeProvider>
     </QueryClientProvider>

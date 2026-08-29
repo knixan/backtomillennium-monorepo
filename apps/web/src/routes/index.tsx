@@ -21,7 +21,7 @@ function HomePage() {
       <Card className="w-full max-w-md border-border bg-card">
         <CardHeader>
           <CardTitle className="font-display text-lg leading-relaxed">
-            <span className="text-primary">MILLENIUM</span>
+            <span className="text-primary">NÄTHÄNGET</span>
           </CardTitle>
           <CardDescription>Web-grund: Vite + React + TanStack + Tailwind + shadcn</CardDescription>
         </CardHeader>

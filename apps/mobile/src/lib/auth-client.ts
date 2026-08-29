@@ -8,8 +8,8 @@ export const authClient = createAuthClient({
   baseURL: `${API_URL}/auth`,
   plugins: [
     expoClient({
-      scheme: "millenium",
-      storagePrefix: "millenium",
+      scheme: "nathanget",
+      storagePrefix: "nathanget",
       storage: SecureStore,
     }),
   ],

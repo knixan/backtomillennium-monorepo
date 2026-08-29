@@ -19,6 +19,10 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  nickname           String
+  birthDate          DateTime
+  sexAssignedAtBirth String
+
   @@unique([email])
   @@map("user")
 }
