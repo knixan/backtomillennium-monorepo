@@ -40,6 +40,11 @@ export const auth = betterAuth({
         type: ["tjej", "kille"],
         required: true,
       },
+      // När användaren godkände villkor + integritetspolicy.
+      termsAcceptedAt: {
+        type: "date",
+        required: true,
+      },
     },
   },
   databaseHooks: {
@@ -56,6 +61,16 @@ export const auth = betterAuth({
           if (!isOldEnough(parsed)) {
             throw new APIError("BAD_REQUEST", {
               message: `Du måste vara minst ${MIN_AGE} år för att skapa ett konto.`,
+            });
+          }
+
+          // Villkor + integritetspolicy måste vara godkända.
+          const termsAcceptedAt = (user as { termsAcceptedAt?: Date | string | null })
+            .termsAcceptedAt;
+          const acceptedAt = termsAcceptedAt ? new Date(termsAcceptedAt) : null;
+          if (!acceptedAt || Number.isNaN(acceptedAt.getTime())) {
+            throw new APIError("BAD_REQUEST", {
+              message: "Du måste godkänna villkoren och integritetspolicyn.",
             });
           }
         },

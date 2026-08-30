@@ -106,7 +106,7 @@ Alla kör via Turborepo över hela workspacet:
 
 Schemat ligger i `apps/backend/prisma/schema.prisma` och innehåller Better Auth-modellerna
 (`user`, `session`, `account`, `verification`) med extrafält på användaren
-(`nickname`, `birthDate`, `sexAssignedAtBirth`).
+(`nickname`, `birthDate`, `sexAssignedAtBirth`, `termsAcceptedAt`).
 
 ```bash
 pnpm --filter @nathanget/backend prisma:generate   # generera klient
@@ -121,3 +121,22 @@ pnpm --filter @nathanget/backend prisma:studio     # öppna Prisma Studio
 `.github/workflows/ci.yml` körs vid push och PR mot `main`. Den installerar beroenden,
 genererar Prisma-klienten och kör `lint`, `typecheck` och `build` – men bara på de paket
 som påverkats av ändringen (`turbo run ... --filter="...[ref]"`).
+
+### Köra CI lokalt
+
+Kör samma steg som CI innan du pushar:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm --filter @nathanget/backend prisma:generate
+pnpm turbo run lint typecheck build --filter="...[HEAD^1]"
+```
+
+`--filter="...[HEAD^1]"` = bara paket som ändrats sedan förra commiten (plus det som beror på dem),
+precis som CI. **Kör från repo-roten**, inte inifrån en app-mapp.
+
+Vill du testa **hela** monorepot oavsett vad som ändrats:
+
+```bash
+pnpm turbo run lint typecheck build
+```

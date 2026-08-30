@@ -52,6 +52,10 @@ export const birthDateSchema = z
 
 const sexAssignedAtBirth = z.enum(sexAssignedAtBirthValues, { error: "Välj ett alternativ" });
 
+const acceptTerms = z
+  .boolean()
+  .refine((v) => v === true, "Du måste godkänna villkoren och integritetspolicyn");
+
 export const registerSchema = z
   .object({
     nickname,
@@ -60,6 +64,7 @@ export const registerSchema = z
     confirmPassword: z.string(),
     birthDate: birthDateSchema,
     sexAssignedAtBirth,
+    acceptTerms,
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: "Lösenorden matchar inte",

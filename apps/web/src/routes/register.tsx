@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { AuthLayout } from "@/components/auth-layout";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ function RegisterPage() {
       password: "",
       confirmPassword: "",
       birthDate: "",
+      acceptTerms: false,
     },
   });
 
@@ -42,6 +44,7 @@ function RegisterPage() {
       nickname: values.nickname,
       birthDate: new Date(values.birthDate),
       sexAssignedAtBirth: values.sexAssignedAtBirth,
+      termsAcceptedAt: new Date(),
       callbackURL: `${window.location.origin}/verify-email`,
     });
 
@@ -150,6 +153,45 @@ function RegisterPage() {
             {...form.register("confirmPassword")}
           />
         </Field>
+
+        <Controller
+          control={form.control}
+          name="acceptTerms"
+          render={({ field, fieldState }) => (
+            <div className="space-y-1.5">
+              <div className="flex items-start gap-2.5">
+                <Checkbox
+                  id="acceptTerms"
+                  checked={field.value === true}
+                  onCheckedChange={(checked) => field.onChange(checked === true)}
+                  onBlur={field.onBlur}
+                  aria-invalid={Boolean(fieldState.error)}
+                  className="mt-0.5"
+                />
+                <label htmlFor="acceptTerms" className="text-sm leading-snug text-muted-foreground">
+                  Jag godkänner Näthängets{" "}
+                  <Link to="/villkor" target="_blank" className="text-primary hover:underline">
+                    villkor
+                  </Link>{" "}
+                  och{" "}
+                  <Link
+                    to="/integritetspolicy"
+                    target="_blank"
+                    className="text-primary hover:underline"
+                  >
+                    integritetspolicy
+                  </Link>
+                  .
+                </label>
+              </div>
+              {fieldState.error ? (
+                <p className="text-xs text-destructive" role="alert">
+                  {fieldState.error.message}
+                </p>
+              ) : null}
+            </div>
+          )}
+        />
 
         {serverError ? (
           <p className="text-sm text-destructive" role="alert">

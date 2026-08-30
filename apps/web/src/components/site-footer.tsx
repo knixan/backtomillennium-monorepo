@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 
 const footerLinks = [
   { label: "Om oss", to: "/" },
-  { label: "Regler", to: "/" },
-  { label: "Integritet", to: "/" },
+  { label: "Villkor", to: "/villkor" },
+  { label: "Integritetspolicy", to: "/integritetspolicy" },
   { label: "Kontakta oss", to: "/" },
 ] as const;
 

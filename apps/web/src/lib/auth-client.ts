@@ -10,6 +10,7 @@ export const authClient = createAuthClient({
         nickname: { type: "string", required: true },
         birthDate: { type: "date", required: true },
         sexAssignedAtBirth: { type: "string", required: true },
+        termsAcceptedAt: { type: "date", required: true },
       },
     }),
   ],
