@@ -3,7 +3,7 @@ import { LogIn, Menu, UserPlus, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Wordmark } from "@/components/wordmark";
+import { Logo } from "@/components/logo";
 import { navItems } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
@@ -11,11 +11,11 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
-        <Wordmark className="text-lg sm:text-xl" />
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
+      <div className="mx-auto flex h-18 max-w-7xl items-center gap-4 px-4 sm:px-6">
+        <Logo />
 
-        {/* Desktop navigation */}
+        {/* D E S K T O P  N A V I G A T I O N */}
         <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
           {navItems.map((item) => (
             <Link
@@ -31,7 +31,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        {/* Desktop auth actions */}
+        {/* D E S K T O P  A U T H  A C T I O N S */}
         <div className="ml-auto hidden items-center gap-2 lg:flex">
           <Button asChild variant="ghost" size="icon" aria-label="Logga in">
             <Link to="/login">
@@ -45,7 +45,7 @@ export function SiteHeader() {
           </Button>
         </div>
 
-        {/* Mobile actions */}
+        {/*  M O B I L E  */}
         <div className="ml-auto flex items-center gap-1 lg:hidden">
           <Button asChild variant="ghost" size="icon" aria-label="Logga in">
             <Link to="/login">
@@ -73,7 +73,7 @@ export function SiteHeader() {
       <div
         className={cn(
           "overflow-hidden border-t border-border transition-[max-height] duration-300 lg:hidden",
-          menuOpen ? "max-h-[32rem]" : "max-h-0",
+          menuOpen ? "max-h-128" : "max-h-0",
         )}
       >
         <nav className="grid gap-1 px-4 py-3">
