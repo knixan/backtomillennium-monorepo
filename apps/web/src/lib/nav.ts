@@ -2,12 +2,12 @@ import {
   BookOpen,
   Footprints,
   House,
-  MapPin,
+  Pin,
   Search,
   SquarePen,
-  User,
+  SquareUserRound ,
   Users,
-  Wine,
+  BottleWine,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,12 +23,12 @@ export interface NavItem {
  */
 export const navItems: NavItem[] = [
   { label: "Hem", to: "/", icon: House },
-  { label: "Profil", to: "/", icon: User },
-  { label: "Flaskpost", to: "/", icon: Wine },
+  { label: "Profil", to: "/", icon: SquareUserRound  },
+  { label: "Flaskpost", to: "/", icon: BottleWine },
   { label: "Fotavtryck", to: "/", icon: Footprints },
   { label: "Gästbok", to: "/", icon: BookOpen },
   { label: "Klotterplanket", to: "/", icon: SquarePen },
-  { label: "Träffpunkten", to: "/", icon: MapPin },
+  { label: "Träffpunkten", to: "/", icon: Pin },
   { label: "Vänner", to: "/", icon: Users },
   { label: "Sök", to: "/", icon: Search },
 ];
