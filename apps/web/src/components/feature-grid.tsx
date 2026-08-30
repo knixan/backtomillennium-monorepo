@@ -1,4 +1,4 @@
-import { BookOpen, Pin, MessagesSquare, SquarePen, SquareUserRound, BottleWine, type LucideIcon } from "lucide-react";
+import { BookOpen, FlameKindling, MessagesSquare, SquarePen, SquareUserRound, BottleWine, type LucideIcon } from "lucide-react";
 
 interface Feature {
   icon: LucideIcon;
@@ -23,7 +23,7 @@ const features: Feature[] = [
     description: "Skriv på klotterplanket och läs de senaste inläggen från alla medlemmar.",
   },
   {
-    icon: Pin,
+    icon: FlameKindling,
     title: "Träffpunkten",
     description: "Läs och skriv inlägg till och från andra som befinner sig i närheten.",
   },

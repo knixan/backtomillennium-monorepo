@@ -5,6 +5,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
 
 import { MobileTabBar } from "@/components/mobile-tab-bar";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 interface RouterContext {
@@ -31,6 +32,7 @@ function RootLayout() {
       <SiteHeader />
       <div className="pb-20 lg:pb-0">
         <Outlet />
+        <SiteFooter />
       </div>
       <MobileTabBar />
       <TanStackRouterDevtools position="bottom-right" />
