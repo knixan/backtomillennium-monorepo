@@ -25,11 +25,18 @@ export function isOldEnough(birthDate: Date | string, now: Date = new Date()): b
   return calculateAge(birthDate, now) >= MIN_AGE;
 }
 
-const nickname = z
+const username = z
   .string()
   .trim()
   .min(2, "Smeknamnet måste vara minst 2 tecken")
-  .max(30, "Smeknamnet får vara högst 30 tecken");
+  .max(30, "Smeknamnet får vara högst 30 tecken")
+  .regex(/^[a-zA-Z0-9_.-]+$/, "Endast bokstäver, siffror samt . _ -");
+
+const firstName = z
+  .string()
+  .trim()
+  .max(50, "Förnamnet får vara högst 50 tecken")
+  .optional();
 
 const email = z
   .string()
@@ -58,7 +65,8 @@ const acceptTerms = z
 
 export const registerSchema = z
   .object({
-    nickname,
+    username,
+    firstName,
     email,
     password,
     confirmPassword: z.string(),
@@ -73,8 +81,9 @@ export const registerSchema = z
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 
+/** Inloggning sker med e-post eller smeknamn. */
 export const loginSchema = z.object({
-  email,
+  identifier: z.string().trim().min(1, "Ange e-post eller smeknamn"),
   password: z.string().min(1, "Ange ditt lösenord"),
 });
 

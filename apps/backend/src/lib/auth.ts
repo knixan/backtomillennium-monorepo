@@ -5,6 +5,7 @@ import { expo } from "@better-auth/expo";
 import { MIN_AGE, isOldEnough } from "@nathanget/shared-types";
 import { prisma } from "./prisma.js";
 import { sendEmail } from "./mailer.js";
+import { username } from "better-auth/plugins";
 
 const expoDevelopmentOrigins = ["exp://", "exp://**", "exp://192.168.*.*:*/**"];
 
@@ -28,9 +29,10 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      nickname: {
+      // Frivilligt förnamn. Inget efternamn samlas in.
+      firstName: {
         type: "string",
-        required: true,
+        required: false,
       },
       birthDate: {
         type: "date",
@@ -50,8 +52,14 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        // Åldersgräns 13 år – serversidan har sista ordet (klientvalidering går att kringgå).
+        // Serversidan har sista ordet (klientvalidering går att kringgå).
         before: async (user) => {
+          // Smeknamn (username) är obligatoriskt – username-pluginet tillåter tomt annars.
+          const uname = (user as { username?: string | null }).username;
+          if (!uname || uname.trim().length < 2) {
+            throw new APIError("BAD_REQUEST", { message: "Smeknamn krävs." });
+          }
+
           const birthDate = (user as { birthDate?: Date | string | null }).birthDate;
           const parsed = birthDate ? new Date(birthDate) : null;
 
@@ -77,7 +85,11 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [expo()],
+  plugins: [
+    // Tillåter inloggning med smeknamn (username) utöver e-post.
+    username({ minUsernameLength: 2, maxUsernameLength: 30 }),
+    expo(),
+  ],
   trustedOrigins: [
     "http://localhost:5173",
     "http://localhost:8081",

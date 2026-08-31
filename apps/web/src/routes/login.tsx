@@ -17,26 +17,31 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
-  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+  const [unverified, setUnverified] = useState<{ email: string | null } | null>(null);
   const [resent, setResent] = useState(false);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { identifier: "", password: "" },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setServerError(null);
-    setUnverifiedEmail(null);
+    setUnverified(null);
     setResent(false);
 
-    const { error } = await signIn.email({ email: values.email, password: values.password });
+    const identifier = values.identifier;
+    const isEmail = identifier.includes("@");
+
+    const { error } = isEmail
+      ? await signIn.email({ email: identifier, password: values.password })
+      : await signIn.username({ username: identifier, password: values.password });
 
     if (error) {
       if (error.status === 403) {
-        setUnverifiedEmail(values.email);
+        setUnverified({ email: isEmail ? identifier : null });
       } else if (error.status === 401) {
-        setServerError("Fel e-post eller lösenord.");
+        setServerError("Fel uppgifter. Kontrollera e-post/smeknamn och lösenord.");
       } else {
         setServerError(error.message ?? "Något gick fel. Försök igen.");
       }
@@ -47,9 +52,9 @@ function LoginPage() {
   });
 
   async function resendVerification() {
-    if (!unverifiedEmail) return;
+    if (!unverified?.email) return;
     await authClient.sendVerificationEmail({
-      email: unverifiedEmail,
+      email: unverified.email,
       callbackURL: `${window.location.origin}/verify-email`,
     });
     setResent(true);
@@ -68,8 +73,17 @@ function LoginPage() {
       }
     >
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
-        <Field label="E-post" htmlFor="email" error={form.formState.errors.email?.message}>
-          <Input id="email" type="email" autoComplete="email" {...form.register("email")} />
+        <Field
+          label="E-post eller smeknamn"
+          htmlFor="identifier"
+          error={form.formState.errors.identifier?.message}
+        >
+          <Input
+            id="identifier"
+            autoComplete="username"
+            autoCapitalize="none"
+            {...form.register("identifier")}
+          />
         </Field>
 
         <Field label="Lösenord" htmlFor="password" error={form.formState.errors.password?.message}>
@@ -87,17 +101,23 @@ function LoginPage() {
           </p>
         ) : null}
 
-        {unverifiedEmail ? (
+        {unverified ? (
           <div className="space-y-2 rounded-md border border-border bg-muted p-3 text-sm">
             <p className="text-muted-foreground">
               Din e-post är inte bekräftad än. Kolla mejlen för verifieringslänken.
             </p>
-            {resent ? (
-              <p className="text-cyan">Ny länk skickad.</p>
+            {unverified.email ? (
+              resent ? (
+                <p className="text-cyan">Ny länk skickad.</p>
+              ) : (
+                <Button type="button" variant="outline" size="sm" onClick={resendVerification}>
+                  Skicka ny länk
+                </Button>
+              )
             ) : (
-              <Button type="button" variant="outline" size="sm" onClick={resendVerification}>
-                Skicka ny länk
-              </Button>
+              <p className="text-muted-foreground">
+                Logga in med din e-postadress för att skicka en ny länk.
+              </p>
             )}
           </div>
         ) : null}

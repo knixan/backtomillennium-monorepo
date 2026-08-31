@@ -19,7 +19,9 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  nickname           String
+  username           String?  @unique
+  displayUsername    String?
+  firstName          String?
   birthDate          DateTime @db.Date
   sexAssignedAtBirth String
   termsAcceptedAt    DateTime?

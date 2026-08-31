@@ -26,7 +26,8 @@ function RegisterPage() {
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      nickname: "",
+      username: "",
+      firstName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -37,11 +38,13 @@ function RegisterPage() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setServerError(null);
+    const firstName = values.firstName?.trim() || undefined;
     const { error } = await signUp.email({
-      name: values.nickname,
+      name: firstName ?? values.username,
+      firstName,
+      username: values.username,
       email: values.email,
       password: values.password,
-      nickname: values.nickname,
       birthDate: new Date(values.birthDate),
       sexAssignedAtBirth: values.sexAssignedAtBirth,
       termsAcceptedAt: new Date(),
@@ -93,8 +96,16 @@ function RegisterPage() {
       }
     >
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
-        <Field label="Smeknamn" htmlFor="nickname" error={form.formState.errors.nickname?.message}>
-          <Input id="nickname" autoComplete="nickname" {...form.register("nickname")} />
+        <Field label="Smeknamn" htmlFor="username" error={form.formState.errors.username?.message}>
+          <Input id="username" autoComplete="username" {...form.register("username")} />
+        </Field>
+
+        <Field
+          label="Förnamn (valfritt)"
+          htmlFor="firstName"
+          error={form.formState.errors.firstName?.message}
+        >
+          <Input id="firstName" autoComplete="given-name" {...form.register("firstName")} />
         </Field>
 
         <Field label="E-post" htmlFor="email" error={form.formState.errors.email?.message}>
