@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as IntegritetspolicyRouteImport } from './routes/integritetspolicy'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as VillkorRouteImport } from './routes/villkor'
@@ -29,6 +30,11 @@ const IntegritetspolicyRoute = IntegritetspolicyRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/integritetspolicy': typeof IntegritetspolicyRoute
   '/login': typeof LoginRoute
+  '/profil': typeof ProfilRoute
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/integritetspolicy': typeof IntegritetspolicyRoute
   '/login': typeof LoginRoute
+  '/profil': typeof ProfilRoute
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/integritetspolicy': typeof IntegritetspolicyRoute
   '/login': typeof LoginRoute
+  '/profil': typeof ProfilRoute
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/integritetspolicy'
     | '/login'
+    | '/profil'
     | '/register'
     | '/verify-email'
     | '/villkor'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/integritetspolicy'
     | '/login'
+    | '/profil'
     | '/register'
     | '/verify-email'
     | '/villkor'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/integritetspolicy'
     | '/login'
+    | '/profil'
     | '/register'
     | '/verify-email'
     | '/villkor'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IntegritetspolicyRoute: typeof IntegritetspolicyRoute
   LoginRoute: typeof LoginRoute
+  ProfilRoute: typeof ProfilRoute
   RegisterRoute: typeof RegisterRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   VillkorRoute: typeof VillkorRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IntegritetspolicyRoute: IntegritetspolicyRoute,
   LoginRoute: LoginRoute,
+  ProfilRoute: ProfilRoute,
   RegisterRoute: RegisterRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   VillkorRoute: VillkorRoute,

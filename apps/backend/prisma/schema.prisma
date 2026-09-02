@@ -26,6 +26,10 @@ model User {
   sexAssignedAtBirth String
   termsAcceptedAt    DateTime?
 
+  // Profil
+  bio       String?
+  interests String[] @default([])
+
   @@unique([email])
   @@map("user")
 }

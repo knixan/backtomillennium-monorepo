@@ -23,7 +23,7 @@ export interface NavItem {
  */
 export const navItems: NavItem[] = [
   { label: "Hem", to: "/", icon: House },
-  { label: "Profil", to: "/", icon: SquareUserRound  },
+  { label: "Profil", to: "/profil", icon: SquareUserRound },
   { label: "Flaskpost", to: "/", icon: BottleWine },
   { label: "Fotavtryck", to: "/", icon: Footprints },
   { label: "Gästbok", to: "/", icon: BookOpen },

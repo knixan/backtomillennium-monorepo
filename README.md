@@ -106,10 +106,14 @@ Alla kör via Turborepo över hela workspacet:
 
 Schemat ligger i `apps/backend/prisma/schema.prisma` och innehåller Better Auth-modellerna
 (`user`, `session`, `account`, `verification`) med extrafält på användaren
-(`username` + `displayUsername`, `firstName`, `birthDate`, `sexAssignedAtBirth`, `termsAcceptedAt`).
+(`username` + `displayUsername`, `firstName`, `birthDate`, `sexAssignedAtBirth`,
+`termsAcceptedAt`, `bio`, `interests`).
 
 Auth: inloggning sker med **e-post eller smeknamn** (`username`-pluginet). Förnamn är
 frivilligt, efternamn samlas inte in.
+
+Profil: `bio` ("om mig") och `interests` (lista) redigeras på `/profil` via de
+session-skyddade endpointerna `GET/PATCH /me/profile` i backend.
 
 ```bash
 pnpm --filter @nathanget/backend prisma:generate   # generera klient

@@ -26,6 +26,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm format:check
+
       - name: Generate Prisma client
         run: pnpm --filter @nathanget/backend prisma:generate
         env:

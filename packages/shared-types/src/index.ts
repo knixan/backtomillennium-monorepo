@@ -88,3 +88,23 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+/** Max antal intressen på en profil. */
+export const MAX_INTERESTS = 15;
+export const MAX_BIO_LENGTH = 500;
+export const MAX_INTEREST_LENGTH = 30;
+
+export const profileSchema = z.object({
+  bio: z.string().trim().max(MAX_BIO_LENGTH, `Om mig får vara högst ${MAX_BIO_LENGTH} tecken`),
+  interests: z
+    .array(
+      z
+        .string()
+        .trim()
+        .min(1, "Tomt intresse")
+        .max(MAX_INTEREST_LENGTH, `Max ${MAX_INTEREST_LENGTH} tecken per intresse`),
+    )
+    .max(MAX_INTERESTS, `Max ${MAX_INTERESTS} intressen`),
+});
+
+export type ProfileInput = z.infer<typeof profileSchema>;

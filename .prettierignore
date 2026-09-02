@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+dist
+.output
+.turbo
+node_modules
+**/routeTree.gen.ts
+apps/backend/prisma/migrations
+apps/web/public/icons.svg
+apps/web/public/favicon.svg
