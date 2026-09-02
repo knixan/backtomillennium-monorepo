@@ -1,4 +1,12 @@
-import { BookOpen, FlameKindling, MessagesSquare, SquarePen, SquareUserRound, BottleWine, type LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  FlameKindling,
+  MessagesSquare,
+  SquarePen,
+  SquareUserRound,
+  BottleWine,
+  type LucideIcon,
+} from "lucide-react";
 
 interface Feature {
   icon: LucideIcon;

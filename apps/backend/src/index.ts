@@ -2,23 +2,17 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { profileSchema } from "@nathanget/shared-types";
+import { env } from "./lib/env.js";
 import { prisma } from "./lib/prisma.js";
 import { auth } from "./lib/auth.js";
 
 const app = new Hono();
 
-const allowedOrigins = (process.env.CORS_ORIGINS ?? "http://localhost:5173,http://localhost:8081").split(",");
-
-/*
-Det här är en konfiguration för CORS (Cross-Origin Resource Sharing) som används i backend-applikationen. 
-Den tillåter förfrågningar från specifika ursprung som definieras i miljövariabeln CORS_ORIGINS. 
-Om miljövariabeln inte är satt, används standardvärdena http://localhost:5173 och http://localhost:8081.
-*/
-
+// Tillåtna origins för frontend-apparna (kommaseparerade i CORS_ORIGINS).
 app.use(
   "*",
   cors({
-    origin: allowedOrigins,
+    origin: env.CORS_ORIGINS.split(","),
     credentials: true,
   }),
 );
@@ -61,25 +55,14 @@ app.patch("/me/profile", async (c) => {
     return c.json({ error: parsed.error.issues[0]?.message ?? "Ogiltig data" }, 400);
   }
 
-  // Trimma bort dubbletter (skiftlägesokänsligt) och tomma värden.
-  const seen = new Set<string>();
-  const interests = parsed.data.interests.filter((i) => {
-    const key = i.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-
   const profile = await prisma.user.update({
     where: { id: session.user.id },
-    data: { bio: parsed.data.bio || null, interests },
+    data: { bio: parsed.data.bio || null, interests: parsed.data.interests },
     select: profileSelect,
   });
   return c.json(profile);
 });
 
-const port = Number(process.env.PORT ?? 3001);
-
-serve({ fetch: app.fetch, port }, (info) => {
+serve({ fetch: app.fetch, port: env.PORT }, (info) => {
   console.log(`backend listening on http://localhost:${info.port}`);
 });

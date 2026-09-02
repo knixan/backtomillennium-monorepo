@@ -1,19 +1,17 @@
-import {
-  PressStart2P_400Regular,
-} from '@expo-google-fonts/press-start-2p';
+import { PressStart2P_400Regular } from "@expo-google-fonts/press-start-2p";
 import {
   SpaceGrotesk_400Regular,
   SpaceGrotesk_500Medium,
   SpaceGrotesk_700Bold,
-} from '@expo-google-fonts/space-grotesk';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useFonts } from 'expo-font';
-import { Stack, Theme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+} from "@expo-google-fonts/space-grotesk";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useFonts } from "expo-font";
+import { Stack, Theme, ThemeProvider } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { useColorScheme } from "react-native";
 
-import { Colors } from '@/constants/theme';
+import { Colors } from "@/constants/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,10 +28,10 @@ const NathangetLight: Theme = {
     notification: Colors.light.warning,
   },
   fonts: {
-    regular: { fontFamily: 'SpaceGrotesk_400Regular', fontWeight: '400' },
-    medium: { fontFamily: 'SpaceGrotesk_500Medium', fontWeight: '500' },
-    bold: { fontFamily: 'SpaceGrotesk_700Bold', fontWeight: '700' },
-    heavy: { fontFamily: 'SpaceGrotesk_700Bold', fontWeight: '700' },
+    regular: { fontFamily: "SpaceGrotesk_400Regular", fontWeight: "400" },
+    medium: { fontFamily: "SpaceGrotesk_500Medium", fontWeight: "500" },
+    bold: { fontFamily: "SpaceGrotesk_700Bold", fontWeight: "700" },
+    heavy: { fontFamily: "SpaceGrotesk_700Bold", fontWeight: "700" },
   },
 };
 
@@ -71,7 +69,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === 'dark' ? NathangetDark : NathangetLight}>
+      <ThemeProvider value={colorScheme === "dark" ? NathangetDark : NathangetLight}>
         <Stack screenOptions={{ headerShown: false }} />
       </ThemeProvider>
     </QueryClientProvider>

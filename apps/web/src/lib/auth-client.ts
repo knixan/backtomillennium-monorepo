@@ -18,3 +18,6 @@ export const authClient = createAuthClient({
 });
 
 export const { signIn, signOut, signUp, useSession } = authClient;
+
+/** Dit e-postverifieringslänken pekar tillbaka efter klick. */
+export const VERIFY_EMAIL_CALLBACK_URL = `${window.location.origin}/verify-email`;

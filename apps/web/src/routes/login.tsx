@@ -2,20 +2,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { AuthLayout } from "@/components/auth-layout";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authClient, signIn } from "@/lib/auth-client";
+import { authClient, signIn, VERIFY_EMAIL_CALLBACK_URL } from "@/lib/auth-client";
 import { loginSchema, type LoginInput } from "@nathanget/shared-types";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: z.object({ redirect: z.string().optional() }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect: redirectTo } = Route.useSearch();
   const [serverError, setServerError] = useState<string | null>(null);
   const [unverified, setUnverified] = useState<{ email: string | null } | null>(null);
   const [resent, setResent] = useState(false);
@@ -48,14 +51,14 @@ function LoginPage() {
       return;
     }
 
-    await navigate({ to: "/" });
+    await navigate({ to: redirectTo ?? "/" });
   });
 
   async function resendVerification() {
     if (!unverified?.email) return;
     await authClient.sendVerificationEmail({
       email: unverified.email,
-      callbackURL: `${window.location.origin}/verify-email`,
+      callbackURL: VERIFY_EMAIL_CALLBACK_URL,
     });
     setResent(true);
   }

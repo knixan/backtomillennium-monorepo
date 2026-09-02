@@ -5,19 +5,28 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { AuthLayout } from "@/components/auth-layout";
+import { TermsCheckbox } from "@/components/terms-checkbox";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { signUp } from "@/lib/auth-client";
-import { registerSchema, sexAssignedAtBirthValues, type RegisterInput } from "@nathanget/shared-types";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { signUp, VERIFY_EMAIL_CALLBACK_URL } from "@/lib/auth-client";
+import {
+  registerSchema,
+  sexAssignedAtBirthValues,
+  type RegisterInput,
+} from "@nathanget/shared-types";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
 const today = new Date().toISOString().slice(0, 10);
+
+const sexOptions = sexAssignedAtBirthValues.map((value) => ({
+  value,
+  label: value.charAt(0).toUpperCase() + value.slice(1),
+}));
 
 function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -48,7 +57,7 @@ function RegisterPage() {
       birthDate: new Date(values.birthDate),
       sexAssignedAtBirth: values.sexAssignedAtBirth,
       termsAcceptedAt: new Date(),
-      callbackURL: `${window.location.origin}/verify-email`,
+      callbackURL: VERIFY_EMAIL_CALLBACK_URL,
     });
 
     if (error) {
@@ -73,8 +82,9 @@ function RegisterPage() {
         <div className="space-y-4 text-sm text-muted-foreground">
           <MailCheck className="size-8 text-cyan" aria-hidden />
           <p>
-            Vi har skickat en verifieringslänk till <strong className="text-foreground">{registeredEmail}</strong>.
-            Klicka på länken i mejlet för att aktivera ditt konto.
+            Vi har skickat en verifieringslänk till{" "}
+            <strong className="text-foreground">{registeredEmail}</strong>. Klicka på länken i
+            mejlet för att aktivera ditt konto.
           </p>
           <p>Hittar du inget mejl? Kolla skräpposten.</p>
         </div>
@@ -125,20 +135,17 @@ function RegisterPage() {
           control={form.control}
           name="sexAssignedAtBirth"
           render={({ field, fieldState }) => (
-            <Field label="Kön vid födsel" htmlFor="sexAssignedAtBirth" error={fieldState.error?.message}>
-              <div id="sexAssignedAtBirth" className="grid grid-cols-2 gap-2">
-                {sexAssignedAtBirthValues.map((value) => (
-                  <Button
-                    key={value}
-                    type="button"
-                    variant={field.value === value ? "default" : "outline"}
-                    onClick={() => field.onChange(value)}
-                    className={cn("capitalize", field.value === value && "ring-2 ring-ring")}
-                  >
-                    {value}
-                  </Button>
-                ))}
-              </div>
+            <Field
+              label="Kön vid födsel"
+              htmlFor="sexAssignedAtBirth"
+              error={fieldState.error?.message}
+            >
+              <SegmentedControl
+                id="sexAssignedAtBirth"
+                value={field.value}
+                onChange={field.onChange}
+                options={sexOptions}
+              />
             </Field>
           )}
         />
@@ -169,38 +176,12 @@ function RegisterPage() {
           control={form.control}
           name="acceptTerms"
           render={({ field, fieldState }) => (
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2.5">
-                <Checkbox
-                  id="acceptTerms"
-                  checked={field.value === true}
-                  onCheckedChange={(checked) => field.onChange(checked === true)}
-                  onBlur={field.onBlur}
-                  aria-invalid={Boolean(fieldState.error)}
-                  className="mt-0.5"
-                />
-                <label htmlFor="acceptTerms" className="text-sm leading-snug text-muted-foreground">
-                  Jag godkänner Näthängets{" "}
-                  <Link to="/villkor" target="_blank" className="text-primary hover:underline">
-                    villkor
-                  </Link>{" "}
-                  och{" "}
-                  <Link
-                    to="/integritetspolicy"
-                    target="_blank"
-                    className="text-primary hover:underline"
-                  >
-                    integritetspolicy
-                  </Link>
-                  .
-                </label>
-              </div>
-              {fieldState.error ? (
-                <p className="text-xs text-destructive" role="alert">
-                  {fieldState.error.message}
-                </p>
-              ) : null}
-            </div>
+            <TermsCheckbox
+              checked={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+            />
           )}
         />
 

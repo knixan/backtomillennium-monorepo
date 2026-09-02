@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
-import { MAX_INTEREST_LENGTH, MAX_INTERESTS } from "@nathanget/shared-types";
+import { dedupeInterests, MAX_INTEREST_LENGTH, MAX_INTERESTS } from "@nathanget/shared-types";
 
 interface InterestsInputProps {
   value: string[];
@@ -15,10 +15,8 @@ export function InterestsInput({ value, onChange, id }: InterestsInputProps) {
 
   const add = () => {
     const trimmed = draft.trim().slice(0, MAX_INTEREST_LENGTH);
-    if (!trimmed) return;
-    const exists = value.some((v) => v.toLowerCase() === trimmed.toLowerCase());
-    if (!exists && value.length < MAX_INTERESTS) {
-      onChange([...value, trimmed]);
+    if (trimmed && value.length < MAX_INTERESTS) {
+      onChange(dedupeInterests([...value, trimmed]));
     }
     setDraft("");
   };

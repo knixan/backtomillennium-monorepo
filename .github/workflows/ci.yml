@@ -42,5 +42,5 @@ jobs:
             echo "ref=HEAD^1" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Lint, typecheck, build affected packages
-        run: pnpm turbo run lint typecheck build --filter="...[${{ steps.base.outputs.ref }}]"
+      - name: Lint, typecheck, test, build affected packages
+        run: pnpm turbo run lint typecheck test build --filter="...[${{ steps.base.outputs.ref }}]"

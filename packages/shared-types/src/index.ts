@@ -32,17 +32,9 @@ const username = z
   .max(30, "Smeknamnet får vara högst 30 tecken")
   .regex(/^[a-zA-Z0-9_.-]+$/, "Endast bokstäver, siffror samt . _ -");
 
-const firstName = z
-  .string()
-  .trim()
-  .max(50, "Förnamnet får vara högst 50 tecken")
-  .optional();
+const firstName = z.string().trim().max(50, "Förnamnet får vara högst 50 tecken").optional();
 
-const email = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .pipe(z.email("Ogiltig e-postadress"));
+const email = z.string().trim().toLowerCase().pipe(z.email("Ogiltig e-postadress"));
 
 const password = z
   .string()
@@ -94,6 +86,21 @@ export const MAX_INTERESTS = 15;
 export const MAX_BIO_LENGTH = 500;
 export const MAX_INTEREST_LENGTH = 30;
 
+/** Ta bort tomma värden och dubbletter (skiftlägesokänsligt), behåll ordningen. */
+export function dedupeInterests(interests: string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const raw of interests) {
+    const value = raw.trim();
+    const key = value.toLowerCase();
+    if (value && !seen.has(key)) {
+      seen.add(key);
+      result.push(value);
+    }
+  }
+  return result;
+}
+
 export const profileSchema = z.object({
   bio: z.string().trim().max(MAX_BIO_LENGTH, `Om mig får vara högst ${MAX_BIO_LENGTH} tecken`),
   interests: z
@@ -104,7 +111,8 @@ export const profileSchema = z.object({
         .min(1, "Tomt intresse")
         .max(MAX_INTEREST_LENGTH, `Max ${MAX_INTEREST_LENGTH} tecken per intresse`),
     )
-    .max(MAX_INTERESTS, `Max ${MAX_INTERESTS} intressen`),
+    .max(MAX_INTERESTS, `Max ${MAX_INTERESTS} intressen`)
+    .transform(dedupeInterests),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;

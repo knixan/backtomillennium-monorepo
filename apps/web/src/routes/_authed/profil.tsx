@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -9,16 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { getMyProfile, updateMyProfile } from "@/lib/api";
-import { authClient } from "@/lib/auth-client";
 import { MAX_BIO_LENGTH, profileSchema, type ProfileInput } from "@nathanget/shared-types";
 
-export const Route = createFileRoute("/profil")({
-  beforeLoad: async () => {
-    const { data } = await authClient.getSession();
-    if (!data) {
-      throw redirect({ to: "/login" });
-    }
-  },
+// Inloggning krävs – guarden ligger i routes/_authed.tsx.
+export const Route = createFileRoute("/_authed/profil")({
   component: ProfilePage,
 });
 
@@ -85,11 +79,7 @@ function ProfilePage() {
           control={form.control}
           name="interests"
           render={({ field, fieldState }) => (
-            <Field
-              label="Intressen & hobbys"
-              htmlFor="interests"
-              error={fieldState.error?.message}
-            >
+            <Field label="Intressen & hobbys" htmlFor="interests" error={fieldState.error?.message}>
               <InterestsInput id="interests" value={field.value} onChange={field.onChange} />
             </Field>
           )}

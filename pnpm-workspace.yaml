@@ -1,3 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# Delade versioner – referera med "catalog:" i respektive package.json
+# så att alla appar alltid kör samma version.
+catalog:
+  better-auth: ^1.7.2
+  "@better-auth/expo": ^1.7.2
+  zod: ^4.4.3

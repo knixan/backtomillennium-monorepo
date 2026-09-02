@@ -10,7 +10,7 @@ export function Logo({ className }: { className?: string }) {
       aria-label="Näthänget – till startsidan"
       className={cn("inline-flex shrink-0 transition-opacity hover:opacity-80", className)}
     >
-      <img src={logo} alt="Näthänget" className="h-18 w-auto sm:h-18" />
+      <img src={logo} alt="Näthänget" className="h-18 w-auto" />
     </Link>
   );
 }

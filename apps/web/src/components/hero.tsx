@@ -83,7 +83,12 @@ export function Hero() {
         <div className="px-4 pt-6">
           <Heading />
         </div>
-        <img src={heroMobileUrl} alt={HERO_ALT} className="my-5 w-full object-cover" loading="eager" />
+        <img
+          src={heroMobileUrl}
+          alt={HERO_ALT}
+          className="my-5 w-full object-cover"
+          loading="eager"
+        />
         <div className="space-y-5 px-4 pb-2">
           <p className="leading-relaxed text-foreground/90">{INTRO}</p>
           <Actions />

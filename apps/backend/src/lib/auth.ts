@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
+import { username } from "better-auth/plugins";
 import { expo } from "@better-auth/expo";
 import { MIN_AGE, isOldEnough } from "@nathanget/shared-types";
+import { env } from "./env.js";
 import { prisma } from "./prisma.js";
 import { sendEmail } from "./mailer.js";
-import { username } from "better-auth/plugins";
 
 const expoDevelopmentOrigins = ["exp://", "exp://**", "exp://192.168.*.*:*/**"];
 
@@ -38,8 +39,9 @@ export const auth = betterAuth({
         type: "date",
         required: true,
       },
+      // Fritt textfält på auth-nivå; klienten validerar mot tillåtna värden.
       sexAssignedAtBirth: {
-        type: ["tjej", "kille"],
+        type: "string",
         required: true,
       },
       // När användaren godkände villkor + integritetspolicy.
@@ -54,28 +56,29 @@ export const auth = betterAuth({
       create: {
         // Serversidan har sista ordet (klientvalidering går att kringgå).
         before: async (user) => {
+          const u = user as typeof user & {
+            username?: string | null;
+            birthDate?: Date | string | null;
+            termsAcceptedAt?: Date | string | null;
+          };
+
           // Smeknamn (username) är obligatoriskt – username-pluginet tillåter tomt annars.
-          const uname = (user as { username?: string | null }).username;
-          if (!uname || uname.trim().length < 2) {
+          if (!u.username || u.username.trim().length < 2) {
             throw new APIError("BAD_REQUEST", { message: "Smeknamn krävs." });
           }
 
-          const birthDate = (user as { birthDate?: Date | string | null }).birthDate;
-          const parsed = birthDate ? new Date(birthDate) : null;
-
-          if (!parsed || Number.isNaN(parsed.getTime())) {
+          const birthDate = u.birthDate ? new Date(u.birthDate) : null;
+          if (!birthDate || Number.isNaN(birthDate.getTime())) {
             throw new APIError("BAD_REQUEST", { message: "Ogiltigt födelsedatum." });
           }
-          if (!isOldEnough(parsed)) {
+          if (!isOldEnough(birthDate)) {
             throw new APIError("BAD_REQUEST", {
               message: `Du måste vara minst ${MIN_AGE} år för att skapa ett konto.`,
             });
           }
 
           // Villkor + integritetspolicy måste vara godkända.
-          const termsAcceptedAt = (user as { termsAcceptedAt?: Date | string | null })
-            .termsAcceptedAt;
-          const acceptedAt = termsAcceptedAt ? new Date(termsAcceptedAt) : null;
+          const acceptedAt = u.termsAcceptedAt ? new Date(u.termsAcceptedAt) : null;
           if (!acceptedAt || Number.isNaN(acceptedAt.getTime())) {
             throw new APIError("BAD_REQUEST", {
               message: "Du måste godkänna villkoren och integritetspolicyn.",
@@ -94,6 +97,6 @@ export const auth = betterAuth({
     "http://localhost:5173",
     "http://localhost:8081",
     "nathanget://",
-    ...(process.env.NODE_ENV === "development" ? expoDevelopmentOrigins : []),
+    ...(env.NODE_ENV === "development" ? expoDevelopmentOrigins : []),
   ],
 });

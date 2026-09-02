@@ -3,6 +3,9 @@ dist
 .output
 .turbo
 node_modules
+.env
+.env.*
+**/.env.example
 **/routeTree.gen.ts
 apps/backend/prisma/migrations
 apps/web/public/icons.svg
