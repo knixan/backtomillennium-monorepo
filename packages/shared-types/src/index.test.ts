@@ -97,17 +97,46 @@ describe("loginSchema", () => {
 });
 
 describe("profileSchema", () => {
+  const base = {
+    avatar: "",
+    city: "",
+    county: "",
+    bio: "",
+    favoriteMusic: "",
+    favoriteMovies: "",
+    favoriteBooks: "",
+    favoriteGames: "",
+    interests: [] as string[],
+  };
+
+  it("godkänner tom profil", () => {
+    expect(profileSchema.safeParse(base).success).toBe(true);
+  });
+
   it("avdubblar intressen via transform", () => {
-    const result = profileSchema.parse({ bio: "hej", interests: ["A", "a", "B"] });
+    const result = profileSchema.parse({ ...base, interests: ["A", "a", "B"] });
     expect(result.interests).toEqual(["A", "B"]);
   });
 
   it("nekar för lång bio", () => {
-    expect(profileSchema.safeParse({ bio: "x".repeat(501), interests: [] }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...base, bio: "x".repeat(501) }).success).toBe(false);
   });
 
   it("nekar för många intressen", () => {
     const many = Array.from({ length: MAX_INTERESTS + 1 }, (_, i) => `i${i}`);
-    expect(profileSchema.safeParse({ bio: "", interests: many }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...base, interests: many }).success).toBe(false);
+  });
+
+  it("godkänner giltig profilbild och län men nekar ogiltiga", () => {
+    expect(profileSchema.safeParse({ ...base, avatar: "profil1" }).success).toBe(true);
+    expect(profileSchema.safeParse({ ...base, avatar: "profil5" }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...base, county: "Stockholms län" }).success).toBe(true);
+    expect(profileSchema.safeParse({ ...base, county: "Osloland" }).success).toBe(false);
+  });
+
+  it("nekar för långa favoritfält", () => {
+    expect(profileSchema.safeParse({ ...base, favoriteMusic: "x".repeat(121) }).success).toBe(
+      false,
+    );
   });
 });

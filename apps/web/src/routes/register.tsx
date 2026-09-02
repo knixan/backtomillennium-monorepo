@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { signUp, VERIFY_EMAIL_CALLBACK_URL } from "@/lib/auth-client";
+import { authClient, signUp, VERIFY_EMAIL_CALLBACK_URL } from "@/lib/auth-client";
 import {
   registerSchema,
   sexAssignedAtBirthValues,
@@ -31,6 +31,7 @@ const sexOptions = sexAssignedAtBirthValues.map((value) => ({
 function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
+  const [resent, setResent] = useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -61,12 +62,28 @@ function RegisterPage() {
     });
 
     if (error) {
-      setServerError(error.message ?? "Något gick fel. Försök igen.");
+      // Upptaget smeknamn: visa felet vid fältet.
+      if (error.code === "USERNAME_IS_ALREADY_TAKEN") {
+        form.setError("username", { message: "Smeknamnet är upptaget. Välj ett annat." });
+      } else {
+        setServerError(error.message ?? "Något gick fel. Försök igen.");
+      }
       return;
     }
 
+    // Obs: en redan registrerad e-post ger också "success" (Better Auth avslöjar
+    // inte vilka adresser som har konton). Bekräftelseskärmen tar höjd för det.
     setRegisteredEmail(values.email);
   });
+
+  async function resendVerification() {
+    if (!registeredEmail) return;
+    await authClient.sendVerificationEmail({
+      email: registeredEmail,
+      callbackURL: VERIFY_EMAIL_CALLBACK_URL,
+    });
+    setResent(true);
+  }
 
   if (registeredEmail) {
     return (
@@ -86,7 +103,27 @@ function RegisterPage() {
             <strong className="text-foreground">{registeredEmail}</strong>. Klicka på länken i
             mejlet för att aktivera ditt konto.
           </p>
-          <p>Hittar du inget mejl? Kolla skräpposten.</p>
+
+          <div className="space-y-2 rounded-md border border-border bg-muted p-3">
+            <p className="font-medium text-foreground">Ingen mejl inom några minuter?</p>
+            <ul className="list-disc space-y-1 pl-4">
+              <li>Kolla skräpposten.</li>
+              <li>
+                Har du redan ett konto?{" "}
+                <Link to="/login" className="text-primary hover:underline">
+                  Logga in
+                </Link>{" "}
+                istället.
+              </li>
+            </ul>
+            {resent ? (
+              <p className="text-cyan">Ny länk skickad.</p>
+            ) : (
+              <Button type="button" variant="outline" size="sm" onClick={resendVerification}>
+                Skicka länken igen
+              </Button>
+            )}
+          </div>
         </div>
       </AuthLayout>
     );

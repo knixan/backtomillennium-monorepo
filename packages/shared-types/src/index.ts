@@ -85,6 +85,38 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export const MAX_INTERESTS = 15;
 export const MAX_BIO_LENGTH = 500;
 export const MAX_INTEREST_LENGTH = 30;
+export const MAX_CITY_LENGTH = 60;
+export const MAX_FAVORITE_LENGTH = 120;
+
+/** Nycklar för de valbara profilbilderna (assets i apps/web/src/assets/profilbilder). */
+export const AVATAR_KEYS = ["profil1", "profil2", "profil3", "profil4", "profil6"] as const;
+export type AvatarKey = (typeof AVATAR_KEYS)[number];
+
+/** Sveriges 21 län. */
+export const SWEDISH_COUNTIES = [
+  "Blekinge län",
+  "Dalarnas län",
+  "Gotlands län",
+  "Gävleborgs län",
+  "Hallands län",
+  "Jämtlands län",
+  "Jönköpings län",
+  "Kalmar län",
+  "Kronobergs län",
+  "Norrbottens län",
+  "Skåne län",
+  "Stockholms län",
+  "Södermanlands län",
+  "Uppsala län",
+  "Värmlands län",
+  "Västerbottens län",
+  "Västernorrlands län",
+  "Västmanlands län",
+  "Västra Götalands län",
+  "Örebro län",
+  "Östergötlands län",
+] as const;
+export type SwedishCounty = (typeof SWEDISH_COUNTIES)[number];
 
 /** Ta bort tomma värden och dubbletter (skiftlägesokänsligt), behåll ordningen. */
 export function dedupeInterests(interests: string[]): string[] {
@@ -101,8 +133,28 @@ export function dedupeInterests(interests: string[]): string[] {
   return result;
 }
 
+const favorite = z.string().trim().max(MAX_FAVORITE_LENGTH, `Max ${MAX_FAVORITE_LENGTH} tecken`);
+
 export const profileSchema = z.object({
+  // "" = ingen bild vald
+  avatar: z
+    .string()
+    .refine(
+      (v) => v === "" || (AVATAR_KEYS as readonly string[]).includes(v),
+      "Ogiltig profilbild",
+    ),
+  city: z.string().trim().max(MAX_CITY_LENGTH, `Orten får vara högst ${MAX_CITY_LENGTH} tecken`),
+  county: z
+    .string()
+    .refine(
+      (v) => v === "" || (SWEDISH_COUNTIES as readonly string[]).includes(v),
+      "Välj ett giltigt län",
+    ),
   bio: z.string().trim().max(MAX_BIO_LENGTH, `Om mig får vara högst ${MAX_BIO_LENGTH} tecken`),
+  favoriteMusic: favorite,
+  favoriteMovies: favorite,
+  favoriteBooks: favorite,
+  favoriteGames: favorite,
   interests: z
     .array(
       z

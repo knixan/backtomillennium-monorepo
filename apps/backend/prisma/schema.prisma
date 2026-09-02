@@ -27,8 +27,15 @@ model User {
   termsAcceptedAt    DateTime?
 
   // Profil
-  bio       String?
-  interests String[] @default([])
+  avatar         String?
+  city           String?
+  county         String?
+  bio            String?
+  favoriteMusic  String?
+  favoriteMovies String?
+  favoriteBooks  String?
+  favoriteGames  String?
+  interests      String[] @default([])
 
   @@unique([email])
   @@map("user")

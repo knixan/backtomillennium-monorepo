@@ -16,7 +16,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as VillkorRouteImport } from './routes/villkor'
-import { Route as AuthedProfilRouteImport } from './routes/_authed/profil'
+import { Route as AuthedInstallningarRouteImport } from './routes/_authed/installningar'
+import { Route as AuthedProfilIndexRouteImport } from './routes/_authed/profil/index'
+import { Route as AuthedProfilUsernameRouteImport } from './routes/_authed/profil/$username'
+import { Route as AuthedProfilRedigeraRouteImport } from './routes/_authed/profil/redigera'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,9 +55,24 @@ const VillkorRoute = VillkorRouteImport.update({
   path: '/villkor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedProfilRoute = AuthedProfilRouteImport.update({
-  id: '/profil',
-  path: '/profil',
+const AuthedInstallningarRoute = AuthedInstallningarRouteImport.update({
+  id: '/installningar',
+  path: '/installningar',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedProfilIndexRoute = AuthedProfilIndexRouteImport.update({
+  id: '/profil/',
+  path: '/profil/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedProfilUsernameRoute = AuthedProfilUsernameRouteImport.update({
+  id: '/profil/$username',
+  path: '/profil/$username',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedProfilRedigeraRoute = AuthedProfilRedigeraRouteImport.update({
+  id: '/profil/redigera',
+  path: '/profil/redigera',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -65,7 +83,10 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
-  '/profil': typeof AuthedProfilRoute
+  '/installningar': typeof AuthedInstallningarRoute
+  '/profil/$username': typeof AuthedProfilUsernameRoute
+  '/profil/redigera': typeof AuthedProfilRedigeraRoute
+  '/profil/': typeof AuthedProfilIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -74,7 +95,10 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
-  '/profil': typeof AuthedProfilRoute
+  '/installningar': typeof AuthedInstallningarRoute
+  '/profil/$username': typeof AuthedProfilUsernameRoute
+  '/profil/redigera': typeof AuthedProfilRedigeraRoute
+  '/profil': typeof AuthedProfilIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,7 +109,10 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/verify-email': typeof VerifyEmailRoute
   '/villkor': typeof VillkorRoute
-  '/_authed/profil': typeof AuthedProfilRoute
+  '/_authed/installningar': typeof AuthedInstallningarRoute
+  '/_authed/profil/$username': typeof AuthedProfilUsernameRoute
+  '/_authed/profil/redigera': typeof AuthedProfilRedigeraRoute
+  '/_authed/profil/': typeof AuthedProfilIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,7 +123,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/verify-email'
     | '/villkor'
-    | '/profil'
+    | '/installningar'
+    | '/profil/$username'
+    | '/profil/redigera'
+    | '/profil/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -105,6 +135,9 @@ export interface FileRouteTypes {
     | '/register'
     | '/verify-email'
     | '/villkor'
+    | '/installningar'
+    | '/profil/$username'
+    | '/profil/redigera'
     | '/profil'
   id:
     | '__root__'
@@ -115,7 +148,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/verify-email'
     | '/villkor'
-    | '/_authed/profil'
+    | '/_authed/installningar'
+    | '/_authed/profil/$username'
+    | '/_authed/profil/redigera'
+    | '/_authed/profil/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -179,22 +215,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VillkorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/profil': {
-      id: '/_authed/profil'
+    '/_authed/installningar': {
+      id: '/_authed/installningar'
+      path: '/installningar'
+      fullPath: '/installningar'
+      preLoaderRoute: typeof AuthedInstallningarRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/profil/': {
+      id: '/_authed/profil/'
       path: '/profil'
-      fullPath: '/profil'
-      preLoaderRoute: typeof AuthedProfilRouteImport
+      fullPath: '/profil/'
+      preLoaderRoute: typeof AuthedProfilIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/profil/$username': {
+      id: '/_authed/profil/$username'
+      path: '/profil/$username'
+      fullPath: '/profil/$username'
+      preLoaderRoute: typeof AuthedProfilUsernameRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/profil/redigera': {
+      id: '/_authed/profil/redigera'
+      path: '/profil/redigera'
+      fullPath: '/profil/redigera'
+      preLoaderRoute: typeof AuthedProfilRedigeraRouteImport
       parentRoute: typeof AuthedRoute
     }
   }
 }
 
 interface AuthedRouteChildren {
-  AuthedProfilRoute: typeof AuthedProfilRoute
+  AuthedInstallningarRoute: typeof AuthedInstallningarRoute
+  AuthedProfilUsernameRoute: typeof AuthedProfilUsernameRoute
+  AuthedProfilRedigeraRoute: typeof AuthedProfilRedigeraRoute
+  AuthedProfilIndexRoute: typeof AuthedProfilIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedProfilRoute: AuthedProfilRoute,
+  AuthedInstallningarRoute: AuthedInstallningarRoute,
+  AuthedProfilUsernameRoute: AuthedProfilUsernameRoute,
+  AuthedProfilRedigeraRoute: AuthedProfilRedigeraRoute,
+  AuthedProfilIndexRoute: AuthedProfilIndexRoute,
 }
 
 const AuthedRouteWithChildren =
